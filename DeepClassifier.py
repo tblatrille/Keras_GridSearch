@@ -115,24 +115,3 @@ def create_classifier(
     return model
 
 
-def predefined_split(X, batch_size_custom, train_ratio, val_ratio):
-    """
-    Predefines the split of training and validation set to be later used in the grid search
-    """
-
-    X = X.values.reshape((X.shape[0], X.shape[1], 1))
-
-    multiple_train = int(((X.shape[0] * train_ratio) // batch_size_custom))
-    multiple_val = int(((X.shape[0] * val_ratio) // batch_size_custom))
-
-    rows_train = multiple_train * batch_size_custom
-    rows_val = multiple_val * batch_size_custom
-
-    train_list = [-1] * rows_train
-    val_list = [0] * rows_val
-    fold = train_list + val_list
-
-    split = PredefinedSplit(test_fold=fold)
-    return split
-
-
