@@ -1,13 +1,3 @@
-import os
-import sys
-import pandas as pd
-from sklearn import datasets
-import tensorflow as tf
-from tensorflow import GradientTape
-import pandas as pd
-from sklearn.metrics import make_scorer
-from tensorflow.keras import optimizers, Model
-from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import (
     Dense,
@@ -17,8 +7,7 @@ from tensorflow.keras.layers import (
     Flatten,
     Input,
 )
-from scikeras.wrappers import KerasRegressor, KerasClassifier
-from sklearn.model_selection import GridSearchCV, PredefinedSplit
+from scikeras.wrappers import KerasClassifier
 
 
 class DeepClassifier(KerasClassifier):
