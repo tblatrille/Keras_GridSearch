@@ -7,6 +7,8 @@ from tensorflow.keras.layers import (
     Flatten,
     Input,
 )
+import numpy as np
+from sklearn.utils import class_weight
 from scikeras.wrappers import KerasClassifier
 
 
@@ -20,8 +22,13 @@ class DeepClassifier(KerasClassifier):
         batch_size = self.batch_size_custom
         kwargs["batch_size"] = batch_size
         kwargs["validation_split"] = val_ratio
-
-        return super().fit(X=X, y=y, **kwargs)
+        if self.balance_class_weights == True:
+            weights = class_weight.compute_class_weight(class_weight='balanced',
+                                                        classes=np.unique(y),
+                                                        y=y)
+            return super().fit(X=X, y=y, class_weight=dict(zip(np.unique(y),weights)), **kwargs)
+        else:
+            return super().fit(X=X, y=y, **kwargs)
 
     def predict(self, X, **kwargs):
         batch_size = self.batch_size_custom
@@ -35,6 +42,7 @@ def create_classifier(
     train_ratio,
     val_ratio,
     batch_size_custom,
+    balance_class_weights,
 ):
     X_shape_0, X_shape_1, X_shape_2 = meta["X_shape_"]
     input_shape = (X_shape_1, X_shape_2)
@@ -43,7 +51,7 @@ def create_classifier(
     model.train_ratio = train_ratio
     model.val_ratio = val_ratio
     model.batch_size = batch_size_custom
-
+    model.balance_class_weights = balance_class_weights
     architecture_layers = architecture["Layers"]
     architecture_activation_functions = architecture["ActivationFunctions"]
     architecture_neurons = architecture["Neurons"]
